@@ -76,7 +76,7 @@ const Signup = () => {
 
     return {
       title: "Crie sua conta",
-      message: "Cadastre-se para começar a usar a TechFix.",
+      message: "Cadastre-se para começar a usar a Inspirat.",
       bgColor: "bg-blue-50",
       borderColor: "border-blue-200",
       textColor: "text-blue-700",

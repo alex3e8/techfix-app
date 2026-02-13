@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   // Check for saved session on startup
   useEffect(() => {
-    localStorage.removeItem("techfix_user");
+    localStorage.removeItem("inspirat_user");
     setUser(null);
   }, []);
 
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
           const { senha, ...userWithoutPassword } = foundUser;
           setUser(userWithoutPassword);
           localStorage.setItem(
-            "techfix_user",
+            "inspirat_user",
             JSON.stringify(userWithoutPassword),
           );
           setLoading(false);
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
         const { senha, ...userWithoutPassword } = newUser;
         setUser(userWithoutPassword);
         localStorage.setItem(
-          "techfix_user",
+          "inspirat_user",
           JSON.stringify(userWithoutPassword),
         );
         setLoading(false);
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("techfix_user");
+    localStorage.removeItem("inspirat_user");
   };
 
   return (

@@ -70,7 +70,7 @@ const RequestForm = () => {
               <div className="md:w-1/3 bg-gradient-to-b from-blue-50 to-blue-100 p-8 md:p-10">
                 <div className="mb-8">
                   <h3 className="text-lg font-semibold text-blue-800 mb-4">
-                    Por que Escolher a TechFix?
+                    Por que Escolher a Inspirat?
                   </h3>
                   <ul className="space-y-3">
                     <li className="flex items-start">

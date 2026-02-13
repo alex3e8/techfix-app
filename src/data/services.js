@@ -1,7 +1,7 @@
 // Services configuration - Single source of truth
 export const servicesConfig = {
-  name: "TechFix",
-  fullName: "TechFix Suporte Técnico Remoto",
+  name: "Inspirat",
+  fullName: "Inspirat Suporte Técnico Remoto",
   price: 50,
   currency: "R$",
   duration: "30min a 1h",

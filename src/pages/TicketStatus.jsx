@@ -206,7 +206,7 @@ const TicketStatus = () => {
                           <div className="flex justify-between items-start mb-2">
                             <div className="font-medium text-gray-900 capitalize">
                               {update.autor === "suporte"
-                                ? "Suporte TechFix"
+                                ? "Suporte Inspirat"
                                 : update.autor === "cliente"
                                   ? "Você"
                                   : "Sistema"}

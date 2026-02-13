@@ -9,6 +9,8 @@ import useAuth from "./hooks/useAuth";
 
 // Layout
 import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+import WhatsAppButton from "./components/ui/WhatsAppButton";
 
 // Pages
 import Home from "./pages/Home";
@@ -29,50 +31,54 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
   return (
-    <div className="App">
+    <div className="App min-h-screen flex flex-col">
       <Header />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/solicitar" element={<RequestForm />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/confirmacao/:id" element={<Confirmation />} />
+      <main className="flex-grow">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/solicitar" element={<RequestForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/confirmacao/:id" element={<Confirmation />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/payment"
-          element={
-            <ProtectedRoute>
-              <Payment />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/portal"
-          element={
-            <ProtectedRoute>
-              <CustomerPortal />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/solicitacao/:id"
-          element={
-            <ProtectedRoute>
-              <TicketStatus />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          {/* Protected Routes */}
+          <Route
+            path="/payment"
+            element={
+              <ProtectedRoute>
+                <Payment />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/portal"
+            element={
+              <ProtectedRoute>
+                <CustomerPortal />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/solicitacao/:id"
+            element={
+              <ProtectedRoute>
+                <TicketStatus />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
+      <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
