@@ -1,201 +1,207 @@
 import React, { useState, useEffect } from "react";
-import FormInput from "../ui/FormInput";
+import { servicesList, servicesConfig } from "../../data/services";
 import Button from "../ui/Button";
+import FormInput from "../ui/FormInput";
 
-const RequestFormComponent = ({
-  onSubmit,
-  loading = false,
-  prefilledData = null,
-}) => {
+const RequestFormComponent = ({ onSubmit, loading, prefilledData }) => {
   const [formData, setFormData] = useState({
-    nomeCliente: "",
-    email: "",
-    telefone: "",
-    tipoDispositivo: "notebook",
-    marcaDispositivo: "",
-    modeloDispositivo: "",
-    descricaoProblema: "",
-    urgencia: "media",
-    preferenciaContato: "email",
+    serviceType: "",
+    problemDescription: "",
+    name: prefilledData?.nomeCliente || "",
+    email: prefilledData?.email || "",
+    phone: prefilledData?.telefone || "",
+    preferredDate: "",
+    preferredTime: "",
+    anydeskAvailable: true,
   });
 
-  // Load prefilled data if provided
-  useEffect(() => {
-    if (prefilledData) {
-      setFormData((prev) => ({ ...prev, ...prefilledData }));
-    }
-  }, [prefilledData]);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error for this field
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.serviceType) {
+      newErrors.serviceType = "Selecione o tipo de serviço";
+    }
+    if (!formData.problemDescription.trim()) {
+      newErrors.problemDescription = "Descreva o problema ou necessidade";
+    }
+    if (!formData.name.trim()) {
+      newErrors.name = "Nome é obrigatório";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "E-mail é obrigatório";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "E-mail inválido";
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Telefone é obrigatório";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (!validateForm()) return;
+
+    // Transform data to match what the app expects
+    const ticketData = {
+      nomeCliente: formData.name,
+      email: formData.email,
+      telefone: formData.phone,
+      tipoDispositivo: "computador",
+      tipoServico: formData.serviceType,
+      descricaoProblema: formData.problemDescription,
+      urgencia: "media",
+      dataPreferida: formData.preferredDate,
+      horarioPreferido: formData.preferredTime,
+      anydeskDisponivel: formData.anydeskAvailable,
+      valor: servicesConfig.price,
+    };
+
+    onSubmit(ticketData);
+  };
+
+  // Get service title by id
+  const getServiceTitle = (id) => {
+    const service = servicesList.find((s) => s.id === id);
+    return service ? service.title : id;
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormInput
-          label="Seu Nome"
-          value={formData.nomeCliente}
-          onChange={(value) => handleChange("nomeCliente", value)}
-          required
-          placeholder="João Silva"
-          disabled={loading}
-        />
-
-        <FormInput
-          label="E-mail"
-          type="email"
-          value={formData.email}
-          onChange={(value) => handleChange("email", value)}
-          required
-          placeholder="joao@exemplo.com"
-          disabled={loading}
-        />
-      </div>
-
-      <FormInput
-        label="Telefone (Opcional)"
-        value={formData.telefone}
-        onChange={(value) => handleChange("telefone", value)}
-        placeholder="(11) 99999-9999"
-        disabled={loading}
-      />
-
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Informações do Dispositivo
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tipo de Dispositivo *
-            </label>
-            <select
-              value={formData.tipoDispositivo}
-              onChange={(e) => handleChange("tipoDispositivo", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              required
-              disabled={loading}
-            >
-              <option value="notebook">Notebook/Computador</option>
-              <option value="smartphone">Smartphone</option>
-              <option value="tablet">Tablet</option>
-              <option value="impressora">Impressora</option>
-              <option value="rede">Rede/Roteador</option>
-              <option value="outro">Outro</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Marca (Opcional)
-            </label>
-            <input
-              type="text"
-              value={formData.marcaDispositivo}
-              onChange={(e) => handleChange("marcaDispositivo", e.target.value)}
-              placeholder="Apple, Dell, etc."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Modelo (Opcional)
-            </label>
-            <input
-              type="text"
-              value={formData.modeloDispositivo}
-              onChange={(e) =>
-                handleChange("modeloDispositivo", e.target.value)
-              }
-              placeholder="iPhone 15, XPS 13, etc."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              disabled={loading}
-            />
-          </div>
-        </div>
-      </div>
-
-      <FormInput
-        label="Descreva o Problema *"
-        value={formData.descricaoProblema}
-        onChange={(value) => handleChange("descricaoProblema", value)}
-        required
-        textarea
-        rows={5}
-        placeholder="O que está acontecendo? Quando começou? Alguma mensagem de erro?"
-        disabled={loading}
-      />
-
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Informações Adicionais
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Qual o nível de urgência? *
-            </label>
-            <select
-              value={formData.urgencia}
-              onChange={(e) => handleChange("urgencia", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              required
-              disabled={loading}
-            >
-              <option value="baixa">Baixa - Pode esperar alguns dias</option>
-              <option value="media">
-                Média - Precisa ser resolvido esta semana
-              </option>
-              <option value="alta">Alta - Precisa de atenção imediata</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Método de Contato Preferido *
-            </label>
-            <select
-              value={formData.preferenciaContato}
-              onChange={(e) =>
-                handleChange("preferenciaContato", e.target.value)
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
-              required
-              disabled={loading}
-            >
-              <option value="email">E-mail</option>
-              <option value="telefone">Ligação Telefônica</option>
-              <option value="sms">Mensagem de Texto</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div className="pt-6 border-t border-gray-200">
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={loading}
-          fullWidth={false}
-          className="px-8 py-3 text-lg"
+      <div>
+        <label className="block text-gray-700 text-sm font-semibold mb-2">
+          Tipo de Serviço <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={formData.serviceType}
+          onChange={(e) => handleChange("serviceType", e.target.value)}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          {loading ? "Enviando..." : "Enviar Solicitação"}
-        </Button>
-        <p className="text-gray-500 text-sm mt-3">
-          Ao enviar, você concorda em receber comunicações sobre sua
-          solicitação.
+          <option value="">Selecione o serviço desejado</option>
+          {servicesList.map((service) => (
+            <option key={service.id} value={service.id}>
+              {service.title} - R$ 50
+            </option>
+          ))}
+        </select>
+        {errors.serviceType && (
+          <p className="text-red-500 text-sm mt-1">{errors.serviceType}</p>
+        )}
+      </div>
+
+      <FormInput
+        label="Nome completo"
+        value={formData.name}
+        onChange={(value) => handleChange("name", value)}
+        required
+        placeholder="Seu nome completo"
+        error={errors.name}
+      />
+
+      <FormInput
+        label="E-mail"
+        type="email"
+        value={formData.email}
+        onChange={(value) => handleChange("email", value)}
+        required
+        placeholder="seu@email.com"
+        error={errors.email}
+      />
+
+      <FormInput
+        label="Telefone (WhatsApp)"
+        value={formData.phone}
+        onChange={(value) => handleChange("phone", value)}
+        required
+        placeholder="(11) 99999-9999"
+        error={errors.phone}
+      />
+
+      <div>
+        <label className="block text-gray-700 text-sm font-semibold mb-2">
+          Descreva o problema ou o que precisa ser feito{" "}
+          <span className="text-red-500">*</span>
+        </label>
+        <textarea
+          value={formData.problemDescription}
+          onChange={(e) => handleChange("problemDescription", e.target.value)}
+          placeholder="Ex: Meu computador está muito lento, aparece mensagem de vírus, preciso instalar o pacote Office..."
+          rows={4}
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        {errors.problemDescription && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.problemDescription}
+          </p>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <FormInput
+          label="Data preferencial"
+          type="date"
+          value={formData.preferredDate}
+          onChange={(value) => handleChange("preferredDate", value)}
+        />
+        <FormInput
+          label="Horário preferencial"
+          type="time"
+          value={formData.preferredTime}
+          onChange={(value) => handleChange("preferredTime", value)}
+        />
+      </div>
+
+      <div className="bg-blue-50 p-4 rounded-lg">
+        <label className="flex items-center space-x-3">
+          <input
+            type="checkbox"
+            checked={formData.anydeskAvailable}
+            onChange={(e) => handleChange("anydeskAvailable", e.target.checked)}
+            className="w-4 h-4 text-blue-600"
+          />
+          <span className="text-sm text-gray-700">
+            Tenho o AnyDesk instalado ou posso instalar rapidamente
+          </span>
+        </label>
+        <p className="text-xs text-gray-500 mt-2 ml-7">
+          Caso não tenha, enviaremos instruções simples de instalação por
+          e-mail.
         </p>
       </div>
+
+      <div className="bg-gray-50 p-4 rounded-lg">
+        <div className="flex justify-between items-center">
+          <span className="font-semibold">Valor do atendimento:</span>
+          <span className="text-2xl font-bold text-blue-600">R$ 50,00</span>
+        </div>
+        <p className="text-sm text-gray-500 mt-2">
+          * Duração média de 30 minutos a 1 hora. Se necessário mais tempo,
+          avisaremos previamente.
+        </p>
+      </div>
+
+      <Button
+        type="submit"
+        variant="primary"
+        fullWidth
+        disabled={loading}
+        className="py-4 text-lg"
+      >
+        {loading ? "Enviando..." : "Solicitar Atendimento"}
+      </Button>
     </form>
   );
 };

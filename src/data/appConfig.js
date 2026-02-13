@@ -1,8 +1,7 @@
-// Company information - single source of truth
 export const appConfig = {
   company: {
     name: "TechFix",
-    fullName: "TechFix Suporte Técnico",
+    fullName: "TechFix Suporte Técnico Remoto",
     logo: "TF",
     primaryColor: "blue-600",
   },
@@ -11,33 +10,18 @@ export const appConfig = {
     email: "suporte@techfix.com.br",
     whatsapp: "(11) 99999-9999",
   },
+  services: {
+    price: 50,
+    currency: "R$",
+    duration: "30min - 1h",
+    remoteTool: "AnyDesk",
+  },
   warranty: {
-    period: "1 Ano",
-    description: "1 ano de garantia em todos os reparos",
+    period: "7 dias",
+    description: "Garantia de satisfação ou seu dinheiro de volta",
   },
   responseTime: {
-    estimate: "2-4 horas",
-    support: "24/7",
-  },
-  pricing: {
-    freeDiagnosis: true,
-    noFixNoPay: true,
+    estimate: "Em até 24h para agendamento",
+    support: "Segunda a Sexta, 9h às 18h",
   },
 };
-
-// Navigation links
-export const navLinks = [
-  { to: "/", label: "Início" },
-  { to: "/solicitar", label: "Solicitar Ajuda" },
-  { to: "/portal", label: "Minhas Solicitações", protected: true },
-];
-
-// Status flow
-export const statusFlow = [
-  { status: "enviado", label: "Enviado", icon: "📝" },
-  { status: "em-analise", label: "Em Análise", icon: "🔍" },
-  { status: "em-andamento", label: "Em Andamento", icon: "⚙️" },
-  { status: "aguardando-pecas", label: "Aguardando Peças", icon: "📦" },
-  { status: "resolvido", label: "Resolvido", icon: "✅" },
-  { status: "fechado", label: "Fechado", icon: "🔒" },
-];

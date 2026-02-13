@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../ui/StatusBadge";
+import { servicesList } from "../../data/services";
 
 const TicketCard = ({ ticket }) => {
   const formatDate = (dateString) => {
@@ -9,6 +10,11 @@ const TicketCard = ({ ticket }) => {
       month: "short",
       year: "numeric",
     });
+  };
+
+  const getServiceTitle = (serviceId) => {
+    const service = servicesList.find((s) => s.id === serviceId);
+    return service ? service.title : "Atendimento Remoto";
   };
 
   const getLatestUpdate = () => {
@@ -31,7 +37,7 @@ const TicketCard = ({ ticket }) => {
           <div>
             <h3 className="text-xl font-bold text-gray-900">{ticket.id}</h3>
             <p className="text-gray-600 mt-1">
-              {ticket.marcaDispositivo} {ticket.modeloDispositivo}
+              {getServiceTitle(ticket.tipoServico)}
             </p>
           </div>
           <StatusBadge status={ticket.status} />
@@ -49,11 +55,11 @@ const TicketCard = ({ ticket }) => {
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="flex items-center text-gray-600">
             <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-              <span className="text-blue-600">⚡</span>
+              <span className="text-blue-600">💰</span>
             </div>
             <div>
-              <div className="text-sm">Urgência</div>
-              <div className="font-medium capitalize">{ticket.urgencia}</div>
+              <div className="text-sm">Valor</div>
+              <div className="font-medium">R$ 50,00</div>
             </div>
           </div>
 
@@ -62,34 +68,30 @@ const TicketCard = ({ ticket }) => {
               <span className="text-blue-600">📅</span>
             </div>
             <div>
-              <div className="text-sm">Enviado</div>
+              <div className="text-sm">Solicitado</div>
               <div className="font-medium">
                 {formatDate(ticket.dataCriacao)}
               </div>
             </div>
           </div>
 
-          {ticket.custoEstimado && (
-            <div className="flex items-center text-gray-600">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-green-600">💵</span>
-              </div>
-              <div>
-                <div className="text-sm">Orçamento</div>
-                <div className="font-medium">R$ {ticket.custoEstimado}</div>
-              </div>
+          <div className="flex items-center text-gray-600">
+            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+              <span className="text-green-600">🖥️</span>
             </div>
-          )}
+            <div>
+              <div className="text-sm">Atendimento</div>
+              <div className="font-medium">Remoto (AnyDesk)</div>
+            </div>
+          </div>
 
           <div className="flex items-center text-gray-600">
             <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-              <span className="text-blue-600">📱</span>
+              <span className="text-blue-600">⏱️</span>
             </div>
             <div>
-              <div className="text-sm">Dispositivo</div>
-              <div className="font-medium capitalize">
-                {ticket.tipoDispositivo}
-              </div>
+              <div className="text-sm">Duração</div>
+              <div className="font-medium">30min - 1h</div>
             </div>
           </div>
         </div>
